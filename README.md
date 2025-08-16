@@ -34,13 +34,64 @@ The goal: demonstrate how to design **fraud/risk engines** that are:
 
 ## 🏗️ Architecture
 
-              ┌─────────────────────┐
-              │   Model Compiler    │
-              │  (JSON → Model)     │
-              └─────────┬───────────┘
-                        │
-            async reload │
-                        ▼
+```mermaid
+flowchart LR
+  %% ====== CLUSTERS ======
+  subgraph ClientSide["Clients"]
+    C1[API Consumers<br/>/score]
+    C2[Admins<br/>/model/update]
+  end
+
+  subgraph Node["FinGuard Node (WebFlux + Kotlin coroutines)"]
+    direction TB
+    A1[Score API POST /score]
+    A2[Model Admin API POST /model/update]
+    A3[Version API GET /model/version]
+    subgraph Runtime["Hot Path"]
+      direction LR
+      H1[Model Holder using AtomicReference]
+      H2[Scoring Engine]
+      H3[VelocityStore]
+      H4[StatsStore]
+      H5[TravelTracker]
+    end
+    subgraph Reload["Cold Path (Async)"]
+      direction TB
+      R1[Kafka Consumer → model-updates]
+      R2[Model Compiler JSON → Immutable Model]
+      R3[Warm/Validate → precompute indexes]
+      R4[Atomic Swap → H1.ref.set → next]
+    end
+    A4[Actuator Metrics → /actuator/* → Prometheus]
+  end
+
+  subgraph Infra["Infrastructure"]
+    K[Kafka → topic: model-updates]
+    FS[Models Dir → snapshotsDir]
+    PM[Prometheus]
+  end
+
+  %% ====== FLOWS ======
+  C1 -->|JSON txn| A1
+  A1 -->|read-only| H1
+  H1 --> H2
+  H2 --> H3
+  H2 --> H4
+  H2 --> H5
+  H2 -->|decision + reasons + modelVersion| A1
+
+  C2 -->|filename| A2 -->|publish| K
+
+  K --> R1
+  R1 -->|async| R2
+  R2 -->|read| FS
+  R2 --> R3 --> R4 --> H1
+
+  A3 --> H1
+
+  A4 --> PM
+
+```
 
 
 - **Hot path:** only lock-free reads against `AtomicReference<Model>`
