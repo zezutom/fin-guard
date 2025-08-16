@@ -1,0 +1,16 @@
+finguard:
+  model:
+    snapshotsDir: /opt/finguard/models # Base dir (all filenames are relative)
+    bootstrapFile: model-sample.json # Default model name
+  kafka:
+    bootstrapServers: localhost:9092
+    topic: model-updates
+  security:
+    adminApiKey: CHANGEME # Use environment variable in production
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+server:
+  shutdown: graceful
