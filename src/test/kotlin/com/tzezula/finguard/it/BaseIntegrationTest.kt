@@ -50,8 +50,18 @@ abstract class BaseIntegrationTest {
         @JvmStatic
         @DynamicPropertySource
         fun registerProps(reg: DynamicPropertyRegistry) {
+            val bs = kafka.bootstrapServers.removePrefix("PLAINTEXT://")
+
             // Register dynamic application properties for tests
-            reg.add("finguard.kafka.bootstrapServers") { kafka.bootstrapServers }
+
+            // Spring Boot autoconfig, so that the @KafkaListener works
+            reg.add("spring.kafka.bootstrap-servers") { bs }           // Spring Kafka autoconfig (listeners)
+            reg.add("spring.kafka.consumer.auto-offset-reset") { "earliest" } // consume msgs sent before listener starts
+            reg.add("spring.kafka.consumer.key-deserializer") { "org.apache.kafka.common.serialization.StringDeserializer" }
+            reg.add("spring.kafka.consumer.value-deserializer") { "org.apache.kafka.common.serialization.StringDeserializer" }
+
+            // Finguard application properties
+            reg.add("finguard.kafka.bootstrapServers") { bs }
             reg.add("finguard.kafka.topic") { "model-updates" }
             reg.add("finguard.model.snapshotsDir") { snapshotsDir.toAbsolutePath().toString() }
             reg.add("finguard.model.bootstrapFile") { "model-v1.json" }

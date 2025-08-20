@@ -34,7 +34,7 @@ class ScoringEngine(
                 if (issuer != country) {
                     logger.debug("BIN country mismatch: issuer={} userCountry={}", issuer, country)
                     val weight = model.weights[BIN_COUNTRY_MISMATCH_KEY] ?: BIN_COUNTRY_MISMATCH_DEFAULT_WEIGHT
-                    reasons += mapOf(CODE_KEY to BIN_COUNTRY_MISMATCH_KEY, WEIGHT_KEY to weight)
+                    reasons += mapOf(CODE_KEY to BIN_COUNTRY_MISMATCH_KEY)
                     score += weight
                 }
             }
@@ -64,7 +64,6 @@ class ScoringEngine(
     companion object {
         // Universal code and weight keys
         const val CODE_KEY = "code"
-        const val WEIGHT_KEY = "weight"
 
         // Specific scoring keys
         const val BIN_COUNTRY_MISMATCH_DEFAULT_WEIGHT = 12
