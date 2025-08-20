@@ -1,0 +1,58 @@
+{
+  "version": "2025-08-16T18:00:00Z#v1",
+  "createdAt": "2025-08-16T18:00:00Z",
+  "binTable": [
+    {
+      "prefix": "421234",
+      "country": "GB"
+    }
+  ],
+  "mccRisk": {
+    "7995": "HIGH"
+  },
+  "countryRisk": {
+    "GB": 0,
+    "CZ": 0
+  },
+  "disposableEmailDomains": [],
+  "lists": {
+    "allow": {
+      "merchantIds": []
+    },
+    "deny": {
+      "ips": [],
+      "devices": [],
+      "merchants": []
+    }
+  },
+  "weights": {
+    "BIN_COUNTRY_MISMATCH": 12,
+    "MCC_HIGH_RISK": 15,
+    "IP_COUNTRY_MISMATCH": 8,
+    "IMPOSSIBLE_TRAVEL": 18
+  },
+  "thresholds": {
+    "accept": 20,
+    "review": 50,
+    "decline": 80
+  },
+  "velocity": {
+    "windows": [
+      "PT5M",
+      "PT1H",
+      "P1D"
+    ],
+    "limits": {
+      "txnCount": {
+        "PT5M": 5,
+        "PT1H": 15,
+        "P1D": 30
+      }
+    },
+    "caps": {
+      "velocity": 30,
+      "geo": 25,
+      "country": 35
+    }
+  }
+}

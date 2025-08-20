@@ -39,10 +39,14 @@ dependencies {
     // Observability
     implementation("io.micrometer:micrometer-registry-prometheus")
 
+    // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Testcontainers
+    testImplementation("org.testcontainers:redpanda:1.21.3")
 }
 
 kotlin {
