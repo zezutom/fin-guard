@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.testcontainers.shaded.org.awaitility.Awaitility.await
 import java.util.concurrent.TimeUnit
@@ -65,7 +66,7 @@ class ModelSwapAndScoreIT : BaseIntegrationTest() {
 
         // Verify the scoring response
         client.post().uri(url(port, "api/v1/score"))
-            .header("Content-Type", "application/json")
+            .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(scoreReq)
             .exchange()
             .expectStatus().isOk

@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -17,7 +18,7 @@ class ModelAdminApi(
 
     @PostMapping("/update")
     suspend fun updateModel(
-        req: ModelUpdateRequest,
+        @RequestBody req: ModelUpdateRequest,
     ): ResponseEntity<Unit> {
         defaultScope.launch {
             // Use the provided coroutine scope to launch the updateModel operation

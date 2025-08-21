@@ -18,6 +18,8 @@ import java.nio.file.Path
 abstract class BaseIntegrationTest {
     companion object {
 
+        protected const val ADMIN_API_KEY = "TEST_KEY"
+
         @JvmStatic
         protected val kafka = RedpandaContainer(
             DockerImageName.parse("docker.redpanda.com/redpandadata/redpanda:v23.3.12")
@@ -65,7 +67,7 @@ abstract class BaseIntegrationTest {
             reg.add("finguard.kafka.topic") { "model-updates" }
             reg.add("finguard.model.snapshotsDir") { snapshotsDir.toAbsolutePath().toString() }
             reg.add("finguard.model.bootstrapFile") { "model-v1.json" }
-            reg.add("finguard.security.adminApiKey") { "TEST_KEY" }
+            reg.add("finguard.security.adminApiKey") { ADMIN_API_KEY }
 
             // Speed tests up
             reg.add("spring.main.lazy-initialization") { "true" }
